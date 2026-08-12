@@ -1,0 +1,156 @@
+StoreBack/HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+StoreFront/node_modules
+StoreFront/dist
+StoreFront/dist-ssr
+*.local
+
+### SENSITIVE FILES & SECURITY ###
+
+# Environment variables and configuration
+.env
+.env.*
+!.env.example
+!.env.template
+*.env
+*.env.*
+
+# Spring Boot sensitive configuration
+**/application-*.properties
+**/application-*.yml
+**/application-*.yaml
+!**/application.properties
+!**/application.yml
+!**/application.yaml
+application-local.properties
+application-dev.properties
+application-prod.properties
+application-local.yml
+application-dev.yml
+application-prod.yml
+
+# Database credentials
+database.properties
+db.properties
+datasource.properties
+jdbc.properties
+
+# API keys and secrets
+**/secrets/
+**/secret/
+secrets.json
+secrets.yml
+secrets.yaml
+api-keys.json
+api-keys.yml
+credentials.json
+credentials.yml
+
+# SSL/TLS Certificates and Keys
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+**/*.keystore
+**/*.truststore
+
+# OAuth and JWT
+*.jwk
+oauth.json
+oauth.yml
+jwt-secret.*
+
+# AWS credentials
+.aws/
+aws-credentials
+**/aws-config
+
+# Azure credentials
+.azure/
+
+# Google Cloud credentials
+**/google-credentials.json
+**/gcloud-credentials.json
+**/service-account*.json
+
+# SSH keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pem
+**/.ssh/
+
+# Password files
+passwords.txt
+password.txt
+*.password
+
+# Backup files that might contain sensitive data
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*.swp
+*~
+
+# Configuration overrides with potential secrets
+config.local.*
+config.dev.*
+config.prod.*
+settings.local.*
