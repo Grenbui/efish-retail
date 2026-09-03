@@ -42,7 +42,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.update(categoryId, request));
     }
 
-    @DeleteMapping("/category")
+    @DeleteMapping("/category/{categoryId}")
     public ResponseEntity<?> delete(@PathVariable UUID categoryId) {
 
         return ResponseEntity.ok(categoryService.delete(categoryId));
