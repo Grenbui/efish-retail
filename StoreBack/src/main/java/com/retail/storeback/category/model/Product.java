@@ -3,6 +3,7 @@ package com.retail.storeback.category.model;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.retail.storeback.category.model.dto.ProductStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,10 @@ public class Product {
 
     @Column(name = "quantity")
     private int quantity;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Enum<ProductStatusEnum> status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
