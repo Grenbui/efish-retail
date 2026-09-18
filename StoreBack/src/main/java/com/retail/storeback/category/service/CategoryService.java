@@ -31,7 +31,8 @@ public class CategoryService {
     }
 
     public CategoryResponse getById(UUID id) {
-        Category category = categoryRepository.getReferenceById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         return categoryMapper.toResponse(category);
     }
 
