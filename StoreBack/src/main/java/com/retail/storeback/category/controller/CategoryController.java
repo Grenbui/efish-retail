@@ -24,7 +24,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getList());
     }
 
-    @GetMapping("/category")
+    @GetMapping("/category/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@RequestParam UUID id) {
 
         return ResponseEntity.ok(categoryService.getById(id));
