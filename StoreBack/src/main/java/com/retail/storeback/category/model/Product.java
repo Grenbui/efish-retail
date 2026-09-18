@@ -41,7 +41,7 @@ public class Product {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Enum<ProductStatusEnum> status;
+    private ProductStatusEnum status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
