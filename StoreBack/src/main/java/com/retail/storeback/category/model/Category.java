@@ -21,7 +21,7 @@ public class Category {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();

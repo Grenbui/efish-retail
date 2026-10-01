@@ -25,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@RequestParam UUID id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@RequestParam String id) {
 
         return ResponseEntity.ok(categoryService.getById(id));
     }
@@ -37,13 +37,13 @@ public class CategoryController {
     }
 
     @PatchMapping("/category")
-    public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest, @RequestParam UUID id) {
+    public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest, @RequestParam String id) {
 
         return ResponseEntity.ok(categoryService.update(categoryRequest, id));
     }
 
     @DeleteMapping("/category")
-    public ResponseEntity<String> deleteCategory(@RequestParam UUID id) {
+    public ResponseEntity<String> deleteCategory(@RequestParam String id) {
 
         return ResponseEntity.ok(categoryService.delete(id));
     }

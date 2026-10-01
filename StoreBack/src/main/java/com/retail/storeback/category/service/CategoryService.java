@@ -30,7 +30,7 @@ public class CategoryService {
         return categoryResponseList;
     }
 
-    public CategoryResponse getById(UUID id) {
+    public CategoryResponse getById(String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
         return categoryMapper.toResponse(category);
@@ -42,7 +42,7 @@ public class CategoryService {
         return categoryMapper.toResponse(category);
     }
 
-    public CategoryResponse update(CategoryRequest categoryRequest, UUID id) {
+    public CategoryResponse update(CategoryRequest categoryRequest, String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 
@@ -53,7 +53,7 @@ public class CategoryService {
         return categoryMapper.toResponse(category);
     }
 
-    public String delete(UUID id) {
+    public String delete(String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
 

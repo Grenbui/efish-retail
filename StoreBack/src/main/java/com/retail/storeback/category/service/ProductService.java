@@ -24,7 +24,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
 
-    public ProductResponse getProductById(UUID id) {
+    public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
@@ -47,7 +47,7 @@ public class ProductService {
         return productMapper.toResponse(product);
     }
 
-    public ProductResponse update(ProductRequest productRequest, UUID id) {
+    public ProductResponse update(ProductRequest productRequest, String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
@@ -58,7 +58,7 @@ public class ProductService {
         
         // Convert categoryId String to Category entity
         if (productRequest.categoryId() != null) {
-            Category category = categoryRepository.findById(UUID.fromString(productRequest.categoryId()))
+            Category category = categoryRepository.findById(productRequest.categoryId())
                     .orElseThrow(() -> new EntityNotFoundException("Category not found"));
             product.setCategory(category);
         }
@@ -67,7 +67,7 @@ public class ProductService {
         return productMapper.toResponse(product);
     }
 
-    public String delete(UUID id) {
+    public String delete(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
