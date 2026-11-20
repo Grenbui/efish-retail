@@ -2,12 +2,18 @@ package com.retail.storeback.category.model.dto;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 @Builder
 public record ProductRequest(
-        String categoryId,
+        UUID categoryId,
+        String sku,
         String productName,
         String productDescription,
-        int productQuantity,
-        ProductStatusEnum productStatus
+        String sizeLabel,
+        BigDecimal sellingPrice,
+        String imageUrl,
+        Boolean active
 ) {
 }

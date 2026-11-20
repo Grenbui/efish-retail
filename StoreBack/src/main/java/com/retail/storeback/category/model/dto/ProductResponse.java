@@ -1,14 +1,23 @@
 package com.retail.storeback.category.model.dto;
 
-import java.time.Instant;
+import lombok.Builder;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.UUID;
+
+@Builder
 public record ProductResponse(
-        String productId,
-        String categoryId,
+        UUID productId,
+        UUID categoryId,
+        String categoryName,
+        String sku,
         String productName,
         String productDescription,
-        int productQuantity,
-        ProductStatusEnum productStatus,
+        String sizeLabel,
+        BigDecimal sellingPrice,
+        String imageUrl,
+        boolean active,
         Instant createdAt,
         Instant updatedAt
 ) {

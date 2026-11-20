@@ -8,71 +8,91 @@ import com.retail.storeback.category.model.mapper.ProductMapper;
 import com.retail.storeback.category.repository.CategoryRepository;
 import com.retail.storeback.category.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
 
-    public ProductResponse getProductById(String id) {
+    @Transactional(readOnly = true)
+    public ProductResponse getProductById(UUID id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 
-        return  productMapper.toResponse(product);
-    }
-
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductResponse> productResponses = new ArrayList<>();
-        for (Product product : products) {
-            productResponses.add(productMapper.toResponse(product));
-        }
-
-        return productResponses;
-    }
-
-    public ProductResponse create(ProductRequest productRequest) {
-        Product product = productMapper.toEntity(productRequest);
-        productRepository.save(product);
         return productMapper.toResponse(product);
     }
 
-    public ProductResponse update(ProductRequest productRequest, String id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(productMapper::toResponse)
+                .toList();
+    }
 
-        product.setName(productRequest.productName());
-        product.setDescription(productRequest.productDescription());
-        product.setQuantity(productRequest.productQuantity());
-        product.setStatus(productRequest.productStatus());
-        
-        // Convert categoryId String to Category entity
-        if (productRequest.categoryId() != null) {
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategory(UUID categoryId) {
+        return productRepository.findByCategoryId(categoryId).stream()
+                .map(productMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public ProductResponse create(ProductRequest productRequest) {
+        if (productRequest.sku() != null && productRepository.existsBySku(productRequest.sku())) {
+            throw new IllegalArgumentException("Product with SKU already exists: " + productRequest.sku());
+        }
+
+        Category category = categoryRepository.findById(productRequest.categoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + productRequest.categoryId()));
+
+        Product product = productMapper.toEntity(productRequest);
+        product.setCategory(category);
+
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toResponse(savedProduct);
+    }
+
+    @Transactional
+    public ProductResponse update(ProductRequest productRequest, UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+
+        if (productRequest.sku() != null && !productRequest.sku().equals(product.getSku())) {
+            if (productRepository.existsBySku(productRequest.sku())) {
+                throw new IllegalArgumentException("Product with SKU already exists: " + productRequest.sku());
+            }
+            product.setSku(productRequest.sku());
+        }
+
+        if (productRequest.categoryId() != null &&
+                (product.getCategory() == null || !productRequest.categoryId().equals(product.getCategory().getId()))) {
             Category category = categoryRepository.findById(productRequest.categoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                    .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + productRequest.categoryId()));
             product.setCategory(category);
         }
 
-        productRepository.save(product);
-        return productMapper.toResponse(product);
+        productMapper.updateEntityFromRequest(productRequest, product);
+
+        Product updatedProduct = productRepository.save(product);
+        return productMapper.toResponse(updatedProduct);
     }
 
-    public String delete(String id) {
+    @Transactional
+    public String delete(UUID id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 
         productRepository.delete(product);
 
-        return "product deleted successfully";
+        return "Product deleted successfully";
     }
 }
