@@ -6,56 +6,56 @@ import com.retail.storeback.category.model.dto.CategoryResponse;
 import com.retail.storeback.category.model.mapper.CategoryMapper;
 import com.retail.storeback.category.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    @Transactional(readOnly = true)
     public List<CategoryResponse> getList() {
-        List<Category> categoryList = categoryRepository.findAll();
-        List<CategoryResponse> categoryResponseList = new ArrayList<>();
-        for (Category category : categoryList) {
-            categoryResponseList.add(categoryMapper.toResponse(category));
-        }
-
-        return categoryResponseList;
+        return categoryRepository.findAll().stream()
+                .map(categoryMapper::toResponse)
+                .toList();
     }
 
-    public CategoryResponse getById(String id) {
+    @Transactional(readOnly = true)
+    public CategoryResponse getById(UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         return categoryMapper.toResponse(category);
     }
 
+    @Transactional
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Category category = categoryMapper.toEntity(categoryRequest);
-        categoryRepository.save(category);
-        return categoryMapper.toResponse(category);
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.toResponse(savedCategory);
     }
 
-    public CategoryResponse update(CategoryRequest categoryRequest, String id) {
+    @Transactional
+    public CategoryResponse update(CategoryRequest categoryRequest, UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
 
-        category.setName(categoryRequest.categoryName());
-        category.setDescription(categoryRequest.categoryDescription());
+        categoryMapper.updateEntityFromRequest(categoryRequest, category);
 
-        categoryRepository.save(category);
-        return categoryMapper.toResponse(category);
+        Category updatedCategory = categoryRepository.save(category);
+        return categoryMapper.toResponse(updatedCategory);
     }
 
-    public String delete(String id) {
+    @Transactional
+    public String delete(UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
 
         categoryRepository.delete(category);
 

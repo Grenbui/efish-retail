@@ -2,8 +2,9 @@ package com.retail.storeback.category.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "category")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,11 +21,12 @@ import java.util.UUID;
 public class Category {
 
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Product> products = new ArrayList<>();
 
     @Column(name = "name", nullable = false)
@@ -32,11 +35,11 @@ public class Category {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "created_at",nullable = false, updatable = false)
-    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
     private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    @LastModifiedDate
+    @UpdateTimestamp
     private Instant updatedAt;
 }
